@@ -1,0 +1,3 @@
+/home/faturita/temp/BciSift/CMakeFiles/rebuild_cache.dir
+/home/faturita/temp/BciSift/CMakeFiles/edit_cache.dir
+/home/faturita/temp/BciSift/CMakeFiles/BCISift.dir

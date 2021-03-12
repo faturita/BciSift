@@ -6,7 +6,7 @@
 #include <string>
 
 
-#include "../eegimage.h"
+#include "../src/include/eegimage.h"
 
 
 static PyObject *

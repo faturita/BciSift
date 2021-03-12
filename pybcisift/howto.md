@@ -15,5 +15,3 @@ https://www.oreilly.com/library/view/python-cookbook/0596001673/ch16s03.html
 
 https://docs.python.org/2.0/ext/buildValue.html
 
-
-export LD_LIBRARY_PATH=/usr/local/lib:/home/faturita/vlfeat/bin/glnxa64/
