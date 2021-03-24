@@ -37,8 +37,6 @@ pybcisift_extract(PyObject *self, PyObject *args)
     double signal[256];
     
     memset(signal,0,sizeof(double)*256);
-    signal[120] = signal[132] = 40;
-    signal[128] = -50;
 
     /* prepare data as an array of doubles */
     seqlen = PySequence_Fast_GET_SIZE(seq);
@@ -60,6 +58,7 @@ pybcisift_extract(PyObject *self, PyObject *args)
             return 0;
         }
         signal[i] = PyFloat_AS_DOUBLE(fitem);
+        printf("%10.5f", signal[i]);
         Py_DECREF(fitem);
     }    
 

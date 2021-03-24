@@ -146,8 +146,8 @@ void calculate_descriptors(float *descr,cv::Mat image, int width, int height,dou
 
     // ik.sigmax & ik.sigmay don't exist anymore
     // TODO temporarily changing to ik.x & ik.y, may need to fix this
-    ik.x = St;
-    ik.y = Sv;
+    ik.sigmax = St;
+    ik.sigmay = Sv;
 
     k = &ik ;
 
@@ -354,19 +354,19 @@ int eegimage(float *descr,double signal[],int defaultheight, int length, int gam
     // 1 La imagen queda igual
     // 2 La imagen se ajusta a toda la pantalla y se resizea.
     char buff[100];
-    snprintf(buff, sizeof(buff), "%d", windowlabelid+1);
+    snprintf(buff, sizeof(buff), "%d", windowlabelid);
     std::string windowname = buff;
-    int ret = eegimage(descr,signal,length,defaultheight, gammat, gamma, normalize, windowname);
+    int ret = eegimage(descr,signal,defaultheight, length, gammat, gamma, normalize, windowname);
 
     cv::moveWindow(windowname, 300*(windowlabelid % 4),10+250*(windowlabelid / 4));
 
     return ret;
 }
 
-int eegimage(double signal[],int length, int Fs, int gammat, int gamma,bool normalize, int label)
+int eegimage(double signal[],int defaultheight, int length, int gammat, int gamma,bool normalize, int label)
 {
     float descr[128];
-    return eegimage(descr,signal,length,Fs, gammat, gamma,normalize,label);
+    return eegimage(descr,signal,defaultheight,length, gammat, gamma,normalize,label);
 }
 
 

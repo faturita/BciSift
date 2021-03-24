@@ -109,6 +109,7 @@ Download and unpack sources
 ```
  export OpenCV_DIR=~/opencv-master/build
  cmake -DCMAKE_CXX_COMPILER=clang++
+ make
  ```
 
 ## Refs
