@@ -83,7 +83,7 @@ Download and unpack sources
  cd opencv-master
  mkdir -p build
  cd build
- cmake -DOPENCV_EXTRA_MODULES_PATH=../../opencv_contrib-master/modules ..
+ cmake -DOPENCV_EXTRA_MODULES_PATH=../../opencv_contrib-master/modules CMAKE_INSTALL_PREFIX=~/opencv ..
  cmake --build .
  sudo make install
  ```
