@@ -10,6 +10,100 @@
 
 
 static PyObject *
+pybcisift_extract_full(PyObject *self, PyObject *args)
+{
+    const char *command;
+    int sts;
+
+    PyObject* seq;
+    int seqlen;
+    int i;
+
+    int heightofimage = 256;
+    int gamma = 1;
+    int gammat = 1;
+    int signallength = 256;
+    bool normalize = true;
+    int imageid = 1;
+
+    if (!PyArg_ParseTuple(args, "i(ii)(ii)piO", 
+                                &i,
+                                &heightofimage,
+                                &signallength,
+                                &gamma,
+                                &gammat,
+                                &normalize,
+                                &imageid,
+                                &seq))
+        return NULL;
+
+
+    /* get one argument as a sequence */
+    seq = PySequence_Fast(seq, "argument must be iterable");
+    if(!seq)
+        return 0;
+
+    printf("Height: %d\n", heightofimage);
+    printf("Length: %d\n", signallength);
+    printf("Gamma and gammat: %d, %d\n", gamma, gammat);
+    printf("Normalize: %d\n", (normalize?1:0));
+    
+
+
+    float descr[128];
+    double signal[signallength];
+    
+    memset(signal,0,sizeof(double)*signallength);
+
+    /* prepare data as an array of doubles */
+    seqlen = PySequence_Fast_GET_SIZE(seq);
+    //if(!dbar) {
+    //    Py_DECREF(seq);
+    //    return PyErr_NoMemory(  );
+    //}
+    for(i=0; i < seqlen; i++) {
+        PyObject *fitem;
+        PyObject *item = PySequence_Fast_GET_ITEM(seq, i);
+        if(!item) {
+            Py_DECREF(seq);
+            return 0;
+        }
+        fitem = PyNumber_Float(item);
+        if(!fitem) {
+            Py_DECREF(seq);
+            PyErr_SetString(PyExc_TypeError, "all items must be numbers");
+            return 0;
+        }
+        signal[i] = PyFloat_AS_DOUBLE(fitem);
+        //printf("[%10.2f]", signal[i]);
+        Py_DECREF(fitem);
+    }    
+
+    /* clean up, compute, and return result */
+    Py_DECREF(seq);
+
+    eegimage(&descr[0],signal,heightofimage,signallength,gamma,gammat,normalize,imageid);
+
+
+    int N=128;
+    PyObject* python_val = PyList_New(N);
+    for (int i = 0; i < N; ++i)
+    {
+        PyObject* pv = Py_BuildValue("f", descr[i]);
+        PyList_SetItem(python_val, i, pv);
+    }
+
+
+    return python_val;
+
+
+
+
+    //sts = 3;
+    //return Py_BuildValue("i", sts);
+}
+
+static PyObject *
 pybcisift_extract(PyObject *self, PyObject *args)
 {
     const char *command;
@@ -58,7 +152,6 @@ pybcisift_extract(PyObject *self, PyObject *args)
             return 0;
         }
         signal[i] = PyFloat_AS_DOUBLE(fitem);
-        printf("%10.5f", signal[i]);
         Py_DECREF(fitem);
     }    
 
@@ -86,9 +179,11 @@ pybcisift_extract(PyObject *self, PyObject *args)
     //return Py_BuildValue("i", sts);
 }
 
-static PyMethodDef SpamMethods[] = {
+static PyMethodDef methods[] = {
     {"extract",  pybcisift_extract, METH_VARARGS,
-     "Execute a shell command."},
+     "Extract a SIFT descriptor from the signal"},
+    {"extract_full", pybcisift_extract_full, METH_VARARGS,
+     "Extract a SIFT descriptor with parameters from the signal"},
     {NULL, NULL, 0, NULL}        /* Sentinel */
 };
 
@@ -98,7 +193,7 @@ static struct PyModuleDef spammodule = {
     NULL, /* module documentation, may be NULL */
     -1,       /* size of per-interpreter state of the module,
                  or -1 if the module keeps state in global variables. */
-    SpamMethods
+    methods
 };
 
 PyMODINIT_FUNC

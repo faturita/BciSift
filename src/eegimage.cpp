@@ -239,11 +239,11 @@ int eegimage(float *descr,double signal[], int defaultheight, int length, int ga
 
     if (normalize)
     {
+        // @NOTE: Other normalization procedure could be applied here.
         zscore(signal,length);
     }
 
     // FIXME: Adjust height accordingly.
-
     printf("Signal Length %d, Defaultheight = %d\n", length, defaultheight);
 
     height = round(gamma * max(signal,length)) - round( gamma * min(signal, length));
@@ -287,7 +287,7 @@ int eegimage(float *descr,double signal[], int defaultheight, int length, int ga
         cv::Point pt1( (idx) * gammat,value);
         cv::Point pt2( (idx+1) * gammat,valuenext);
 
-        // Draw a new line between pt1 and pt2.  The line routine uses Brasenham algorithm.
+        // Draw a new line between pt1 and pt2.  The line routine uses Bresenham algorithm.
         cv::line(image, pt1, pt2,color);
     }
 
@@ -358,7 +358,7 @@ int eegimage(float *descr,double signal[],int defaultheight, int length, int gam
     std::string windowname = buff;
     int ret = eegimage(descr,signal,defaultheight, length, gammat, gamma, normalize, windowname);
 
-    cv::moveWindow(windowname, 300*(windowlabelid % 4),10+250*(windowlabelid / 4));
+    //cv::moveWindow(windowname, 300*(windowlabelid % 4),10+250*(windowlabelid / 4));
 
     return ret;
 }

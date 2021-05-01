@@ -240,8 +240,6 @@ int main( int argc, char **argv)
                 signal[128] = -50*2;
                 eegimage(&descr[(j*12+i)*128],signal,100,256,1,1,true,1);
 
-                printdescriptor(descr);
-                exit(1);
             }
 
             for(int i=6;i<12;i++)
@@ -252,7 +250,7 @@ int main( int argc, char **argv)
                 signal[132] = 40;
                 signal[128] = -50;
                 //randomSignal(signal,256,20);
-                eegimage(&descr[(j*12+i)*128],signal,256,256,1,1,true,1);
+                eegimage(&descr[(j*12+i)*128],signal,100,256,1,1,true,1);
             }
         }
 
